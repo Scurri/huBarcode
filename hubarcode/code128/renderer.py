@@ -1,5 +1,5 @@
 """Rendering code for code128 barcode"""
-from cStringIO import StringIO
+from io import BytesIO
 try:
     from PIL import Image, ImageFont, ImageDraw
 except ImportError:
@@ -73,7 +73,7 @@ class Code128Renderer:
 
         # Image height 30% of width
         label_border = self.options.get('label_border', 0)
-        self.image_height = self.options.get('height') or (self.image_width / 3)
+        self.image_height = self.options.get('height') or (self.image_width // 3)
         bar_height = self.image_height - label_border - fontsize
 
         # Image: has a white background
@@ -87,7 +87,7 @@ class Code128Renderer:
                 self.img = img
                 self.current_x = quiet_width
                 if show_label:
-                    self.symbol_top = quiet_width / 2
+                    self.symbol_top = quiet_width // 2
                 else:
                     self.symbol_top = 0
                 self.bar_height = bar_height
@@ -117,7 +117,7 @@ class Code128Renderer:
         draw = ImageDraw.Draw(img)
         if show_label:
             xtextwidth = font.getsize(self.text)[0]
-            xtextpos = self.image_width / 2 - (xtextwidth / 2)
+            xtextpos = self.image_width // 2 - (xtextwidth // 2)
             ytextpos = bar_height + label_border
             draw.text((xtextpos, ytextpos), self.text, font=font)
         return img
@@ -131,7 +131,7 @@ class Code128Renderer:
 
     def get_imagedata(self, bar_width):
         """Write the matrix out as PNG to an bytestream"""
-        imagedata = StringIO()
+        imagedata = BytesIO()
         img = self.get_pilimage(bar_width)
         img.save(imagedata, "PNG")
         return imagedata.getvalue()

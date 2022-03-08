@@ -12,9 +12,9 @@ class DataMatrixPlacer:
         self.rows = 0
         self.cols = 0
 
-    def place_bit(self, (posx, posy), bit):
+    def place_bit(self, positions, bit):
         """Place bit in the correct location in the matrix"""
-
+        posx, posy = positions
         # If out of bounds, wrap around to the other side
         if posx < 0:
             posx += self.rows
@@ -101,12 +101,12 @@ class DataMatrixPlacer:
         self.place_bit((1, self.cols - 2), (codeword & (0x01 << 1)) >> 1)
         self.place_bit((1, self.cols - 1), codeword & 0x01)
 
-    def place_standard_shape(self, (posx, posy), codeword):
+    def place_standard_shape(self, positions, codeword):
         """Standard codeword placement
             |1|2|
             |3|4|5|
             |6|7|8| """
-
+        posx, posy = positions
         if self.matrix[posx][posy] is None:
             self.place_bit((posx - 2, posy - 2), (codeword & (0x01 << 7)) >> 7)
             self.place_bit((posx - 2, posy - 1), (codeword & (0x01 << 6)) >> 6)

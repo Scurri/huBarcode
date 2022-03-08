@@ -1,5 +1,3 @@
-[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
-
 h1. huBarcode
 
 huBarcode is a Python Library to generate 1D and 2D Barcodes. Currently it
