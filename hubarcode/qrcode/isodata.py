@@ -2,6 +2,8 @@
 
 import os.path
 
+import six
+
 MAX_DATA_BITS = [
     128, 224, 352, 512, 688, 864, 992, 1232, 1456, 1728,
     2032, 2320, 2672, 2920, 3320, 3624, 4056, 4504, 5016, 5352,
@@ -50,7 +52,7 @@ class MatrixInfo:
         filename = path + "/qrv" + str(version) + "_"
         filename += str(ecl) + ".dat"
         fhndl = open(filename, "rb")
-        unpack = lambda y: [ord(x) for x in y]
+        unpack = lambda y: [ord(x) if not isinstance(x, six.integer_types) else x for x in y]
         self.matrix_d = []
         self.matrix_d.append(unpack(fhndl.read(self.byte_num)))
         self.matrix_d.append(unpack(fhndl.read(self.byte_num)))
@@ -77,12 +79,14 @@ class MatrixInfo:
         fhndl = open(filename, "rb")
         frame_data_str = fhndl.read(65535)
         self.frame_data = []
-        for line in frame_data_str.split("\n"):
+        for line in frame_data_str.split(b"\n"):
             frame_line = []
             for char in line:
-                if char == '1':
+                if six.PY3:
+                    char = six.int2byte(char)
+                if char == b'1':
                     frame_line.append(1)
-                elif char == '0':
+                elif char == b'0':
                     frame_line.append(0)
                 else:
                     raise ValueError("Corrupted frame data file")

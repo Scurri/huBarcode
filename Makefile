@@ -20,12 +20,9 @@ check:
 	-pylint --max-line-length=110 -d E1101 hubarcode/ean13/ hubarcode/datamatrix/ hubarcode/code128/ examples/ examples/
 
 testenv:
-	virtualenv testenv
-	testenv/bin/pip install coverage
-	testenv/bin/pip install PIL
+	pip install 'virtualenv<20.0.0' tox
 
 test:
-	PYTHONPATH=.:./hubarcode python examples/code128.py TESTTEXT
-	PYTHONPATH=.:./hubarcode python test/test_coverage.py
+	PYTHONPATH=.:./hubarcode tox
 
-.PHONY: test testenv
+.PHONY: tox

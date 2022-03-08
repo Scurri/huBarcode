@@ -1,6 +1,9 @@
 """QR Code renderer"""
 
-from cStringIO import StringIO
+from io import BytesIO
+
+import six
+
 try:
     from PIL import Image
 except ImportError:
@@ -52,7 +55,7 @@ class QRCodeRenderer:
 
     def get_imagedata(self, cellsize):
         """Write the matrix out as PNG to an bytestream"""
-        imagedata = StringIO()
+        imagedata = BytesIO()
         img = self.get_pilimage(cellsize)
         img.save(imagedata, "PNG")
         return imagedata.getvalue()
@@ -79,7 +82,10 @@ class QRCodeRenderer:
                 buf += bufrow
             # end for
         # end for
-        return buf
+        if six.PY2:
+            return buf
+        else:
+            return buf.encode('latin-1')
     # end def get_buffer
 
     def get_ascii(self):

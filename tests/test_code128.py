@@ -3,7 +3,7 @@
 
 import unittest
 
-from __init__ import Code128Encoder
+from hubarcode.code128 import Code128Encoder
 
 
 class Code128Test(unittest.TestCase):
@@ -76,9 +76,5 @@ class Code128Test(unittest.TestCase):
             encoder.save('test.png')
 
             import filecmp
-            self.failUnless(filecmp.cmp('test.png',
-                            'hubarcode/code128/test_img/%d.png' % (index + 1)))
-
-
-if __name__ == '__main__':
-    unittest.main()
+            self.assertTrue(filecmp.cmp('test.png',
+                            'tests/code128_img/%d.png' % (index + 1)))

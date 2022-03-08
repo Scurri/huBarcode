@@ -2,7 +2,7 @@
 
 import unittest
 
-from __init__ import EAN13Encoder
+from hubarcode.ean13 import EAN13Encoder
 
 
 class EAN13Test(unittest.TestCase):
@@ -53,9 +53,5 @@ class EAN13Test(unittest.TestCase):
             encoder.save('test.png')
 
             import filecmp
-            self.failUnless(filecmp.cmp('test.png',
-                            'hubarcode/ean13/test_img/%d.png' % (index + 1)))
-
-
-if __name__ == '__main__':
-    unittest.main()
+            self.assertTrue(filecmp.cmp('test.png',
+                                        'tests/ean_img/%d.png' % (index + 1)))

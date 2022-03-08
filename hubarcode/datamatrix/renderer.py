@@ -2,7 +2,10 @@
 
 __revision__ = "$Rev$"
 
-from cStringIO import StringIO
+from io import BytesIO
+
+import six
+
 try:
     from PIL import Image
 except ImportError:
@@ -26,9 +29,9 @@ class DataMatrixRenderer:
         # add the edge handles
         self.add_handles()
 
-    def put_cell(self, (posx, posy), colour=1):
+    def put_cell(self, positions, colour=1):
         """Set the contents of the given cell"""
-
+        posx, posy = positions
         self.matrix[posy][posx] = colour
 
     def add_handles(self):
@@ -84,7 +87,7 @@ class DataMatrixRenderer:
 
     def get_imagedata(self, cellsize):
         """Write the matrix out as PNG to an bytestream"""
-        imagedata = StringIO()
+        imagedata = BytesIO()
         img = self.get_pilimage(cellsize)
         img.save(imagedata, "PNG")
         return imagedata.getvalue()
@@ -107,7 +110,10 @@ class DataMatrixRenderer:
             bufrow = ''.join([pixel(cell) * cellsize for cell in row])
             for _ in range(0, cellsize):
                 buf += bufrow
-        return buf
+        if six.PY2:
+            return buf
+        else:
+            return buf.encode('latin-1')
 
     def get_ascii(self):
         """Write an ascii version of the matrix out to screen"""

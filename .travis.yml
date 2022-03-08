@@ -2,16 +2,18 @@ language: python
 python: 
 - "2.6"
 - "2.7"
+- "3.4"
 install: 
 - sudo apt-get -qq install liblcms1-dev libwebp-dev
 - sudo apt-get install libfreetype6 libfreetype6-dev zlib1g zlib1g-dev
 - sudo apt-get install libjpeg62 libjpeg62-dev
 - sudo apt-get install python-imaging
 - sudo apt-get install libdmtx-dev libdmtx-utils
-- pip install virtualenv
+- pip install 'virtualenv<20.0.0'
+- pip install tox
 - pip install coveralls
 - pip install pyflakes pep8 pylint
-- pip install Pillow
+- pip install six Pillow
 script: make test check
 after_success: 
 - coveralls

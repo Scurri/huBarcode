@@ -13,7 +13,7 @@ try:
 except ImportError:
     pass
 
-from cStringIO import StringIO
+from io import BytesIO
 # maps bar width against font size
 font_sizes = {
     1: 8,
@@ -43,7 +43,7 @@ class EAN13Renderer:
 
         quiet_width = bar_width * 9
         image_width = (2 * quiet_width) + (num_bars * bar_width)
-        image_height = image_width / 2
+        image_height = image_width // 2
 
         img = Image.new('L', (image_width, image_height), 255)
 
@@ -52,7 +52,7 @@ class EAN13Renderer:
             def __init__(self, img):
                 self.img = img
                 self.current_x = quiet_width
-                self.symbol_top = quiet_width / 2
+                self.symbol_top = quiet_width // 2
 
             def write_bar(self, value, full=False):
                 """Draw a bar at the current position,
@@ -84,7 +84,10 @@ class EAN13Renderer:
         font_size = font_sizes.get(bar_width, 24)
 
         # Use relative name, PIL will do searching for us
-        fontfile = os.path.join("fonts", "courR%02d.pil" % font_size)
+        project_path = os.path.realpath(
+            os.path.join(os.path.dirname(__file__), '..'))
+        font_path = os.path.join("fonts", "courR%02d.pil" % font_size)
+        fontfile = os.path.join(project_path, font_path)
 
         font = ImageFont.load_path(fontfile)
         draw = ImageDraw.Draw(img)
@@ -106,7 +109,7 @@ class EAN13Renderer:
 
     def get_imagedata(self, bar_width):
         """Write the matrix out as PNG to a bytestream"""
-        buffer = StringIO()
+        buffer = BytesIO()
         img = self.get_pilimage(bar_width)
         img.save(buffer, "PNG")
         return buffer.getvalue()
